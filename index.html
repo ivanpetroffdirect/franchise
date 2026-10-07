@@ -453,6 +453,16 @@
       line-height: 1.5;
     }
 
+    .footer a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .footer a:hover {
+      color: #171717;
+    }
+
     /* =========================
        MOBILE
     ========================= */
@@ -534,7 +544,6 @@
   </style>
 </head>
 
-
 <body>
 
 <main class="page">
@@ -615,10 +624,11 @@
 
             <input
               id="fee"
-              type="number"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
               min="0"
-              step="10000"
-              value="800000"
+              value="800 000"
             >
 
             <span class="unit">
@@ -673,10 +683,11 @@
 
             <input
               id="monthlyRevenue"
-              type="number"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
               min="0"
-              step="1000"
-              value="50000"
+              value="50 000"
             >
 
             <span class="unit">
@@ -733,10 +744,11 @@
 
             <input
               id="monthlyCost"
-              type="number"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
               min="0"
-              step="1000"
-              value="10000"
+              value="10 000"
             >
 
             <span class="unit">
@@ -1029,7 +1041,6 @@
 
     <section class="result">
 
-
       <!-- CAC -->
 
       <div class="result-label">
@@ -1088,7 +1099,6 @@
       <!-- METRICS -->
 
       <div class="metrics">
-
 
         <!-- LTV -->
 
@@ -1269,6 +1279,16 @@
       Калькулятор помогает оценить экономику
       привлечения франчайзи до запуска рекламной кампании.
 
+      <br><br>
+
+      © 2026 Создал
+      <a
+        href="https://t.me/+b4WeiE1SYrs1MjUy"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Никита Кравченко</a>.
+      Все права защищены.
+
     </div>
 
   </div>
@@ -1287,8 +1307,17 @@
     const element =
       document.getElementById(id);
 
+    /*
+     * Денежные поля отображаются
+     * с пробелами между разрядами.
+     * Перед расчётом пробелы удаляем.
+     */
+
+    const rawValue =
+      element.value.replace(/\s/g, "");
+
     const value =
-      parseFloat(element.value);
+      parseFloat(rawValue);
 
     if (
       !Number.isFinite(value) ||
@@ -1317,6 +1346,104 @@
       " ₽"
     );
   }
+
+
+  /* =========================
+     ФОРМАТИРОВАНИЕ ПОЛЕЙ
+  ========================= */
+
+  const moneyInputIds = [
+    "fee",
+    "monthlyRevenue",
+    "monthlyCost"
+  ];
+
+
+  function formatInputNumber(input) {
+
+    /*
+     * Запоминаем положение курсора,
+     * чтобы при форматировании пробелами
+     * он не прыгал в начало поля.
+     */
+
+    const oldValue = input.value;
+    const oldSelection = input.selectionStart;
+
+    const digitsBeforeCursor =
+      oldValue
+        .slice(0, oldSelection)
+        .replace(/\s/g, "")
+        .length;
+
+    /*
+     * Оставляем только цифры.
+     */
+
+    const digits =
+      oldValue.replace(/\D/g, "");
+
+    if (!digits) {
+      input.value = "";
+      return;
+    }
+
+    /*
+     * Добавляем пробелы между разрядами.
+     */
+
+    const formatted =
+      Number(digits).toLocaleString("ru-RU");
+
+    input.value = formatted;
+
+    /*
+     * Восстанавливаем положение курсора.
+     */
+
+    let newCursorPosition = 0;
+    let digitCount = 0;
+
+    while (
+      newCursorPosition < formatted.length &&
+      digitCount < digitsBeforeCursor
+    ) {
+
+      if (/\d/.test(formatted[newCursorPosition])) {
+        digitCount++;
+      }
+
+      newCursorPosition++;
+    }
+
+    try {
+      input.setSelectionRange(
+        newCursorPosition,
+        newCursorPosition
+      );
+    } catch (error) {
+      // Некоторые браузеры могут запретить
+      // установку курсора в отдельных состояниях.
+    }
+  }
+
+
+  moneyInputIds.forEach(function(id) {
+
+    const input =
+      document.getElementById(id);
+
+    input.addEventListener(
+      "input",
+      function() {
+
+        formatInputNumber(input);
+        calculate();
+
+      }
+    );
+
+  });
 
 
   /* =========================
@@ -1542,6 +1669,16 @@
 
   inputIds.forEach(function(id) {
 
+    /*
+     * Для денежных полей обработчик
+     * уже добавлен выше, поэтому второй
+     * обработчик здесь не нужен.
+     */
+
+    if (moneyInputIds.includes(id)) {
+      return;
+    }
+
     document
       .getElementById(id)
       .addEventListener(
@@ -1600,7 +1737,7 @@
 
   /* =========================
      ЗАКРЫТИЕ ПОДСКАЗКИ
-     ========================= */
+  ========================= */
 
   document.addEventListener(
     "click",
@@ -1618,6 +1755,20 @@
 
     }
   );
+
+
+  /* =========================
+     ПЕРВИЧНОЕ ФОРМАТИРОВАНИЕ
+  ========================= */
+
+  moneyInputIds.forEach(function(id) {
+
+    const input =
+      document.getElementById(id);
+
+    formatInputNumber(input);
+
+  });
 
 
   /* =========================
