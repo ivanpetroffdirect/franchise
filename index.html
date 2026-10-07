@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Калькулятор привлечения франчайзи</title>
+
+  <meta
+    name="description"
+    content="Рассчитайте маржинальный LTV, допустимый CAC, CPL и CPQL при привлечении франчайзи."
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+      background: #f5f5f5;
+      color: #171717;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 48px 20px;
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      margin-bottom: 28px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+
+    .header p {
+      margin: 0;
+      color: #737373;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       SECTIONS
+    ========================= */
+
+    .section {
+      margin-bottom: 26px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .section-description {
+      color: #737373;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: -4px 0 14px;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    /* =========================
+       TOOLTIP
+    ========================= */
+
+    .tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+
+      border: 1px solid #bcbcbc;
+      border-radius: 50%;
+
+      color: #777;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+
+      cursor: help;
+      user-select: none;
+    }
+
+    .tooltip-content {
+      position: absolute;
+
+      left: 0;
+      bottom: calc(100% + 9px);
+
+      width: 285px;
+
+      padding: 13px 14px;
+
+      background: #171717;
+      color: #fff;
+
+      border-radius: 10px;
+
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+      text-align: left;
+
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      transform: translateY(4px);
+
+      transition:
+        opacity .15s ease,
+        transform .15s ease,
+        visibility .15s ease;
+
+      z-index: 50;
+
+      box-shadow:
+        0 8px 24px rgba(0,0,0,.18);
+    }
+
+    .tooltip-content::after {
+      content: "";
+
+      position: absolute;
+
+      left: 7px;
+      top: 100%;
+
+      border: 5px solid transparent;
+      border-top-color: #171717;
+    }
+
+    .tooltip:hover .tooltip-content,
+    .tooltip:focus .tooltip-content,
+    .tooltip.open .tooltip-content {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .tooltip-content strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .tooltip-content .formula {
+      display: block;
+      margin-top: 7px;
+      padding-top: 7px;
+      border-top: 1px solid #3a3a3a;
+      color: #c7c7c7;
+    }
+
+    /* =========================
+       INPUTS
+    ========================= */
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      height: 48px;
+
+      border: 1px solid #d9d9d9;
+      border-radius: 10px;
+
+      background: #fff;
+
+      padding: 0 50px 0 14px;
+
+      font-size: 16px;
+      color: #171717;
+
+      outline: none;
+
+      transition:
+        border-color .15s,
+        box-shadow .15s;
+    }
+
+    input:focus {
+      border-color: #111;
+
+      box-shadow:
+        0 0 0 3px rgba(0,0,0,.06);
+    }
+
+    .unit {
+      position: absolute;
+
+      right: 14px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      color: #737373;
+      font-size: 14px;
+
+      pointer-events: none;
+    }
+
+    /* =========================
+       INFO BOX
+    ========================= */
+
+    .info-box {
+      background: #fff;
+
+      border: 1px solid #e2e2e2;
+      border-radius: 12px;
+
+      padding: 14px 16px;
+      margin-top: 14px;
+
+      color: #666;
+
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .info-box strong {
+      color: #171717;
+    }
+
+    /* =========================
+       RESULT
+    ========================= */
+
+    .result {
+      background: #171717;
+      color: #fff;
+
+      border-radius: 18px;
+
+      padding: 28px;
+
+      margin-top: 30px;
+    }
+
+    .result-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      color: #b5b5b5;
+
+      font-size: 14px;
+
+      margin-bottom: 7px;
+    }
+
+    .result-label .tooltip {
+      border-color: #666;
+      color: #aaa;
+    }
+
+    .result-label .tooltip-content {
+      background: #fff;
+      color: #171717;
+
+      box-shadow:
+        0 8px 24px rgba(0,0,0,.25);
+    }
+
+    .result-label .tooltip-content::after {
+      border-top-color: #fff;
+    }
+
+    .result-label .tooltip-content strong {
+      color: #171717;
+    }
+
+    .result-label .tooltip-content .formula {
+      color: #666;
+      border-top-color: #e5e5e5;
+    }
+
+    .result-main {
+      font-size: 42px;
+      line-height: 1;
+
+      font-weight: 750;
+
+      letter-spacing: -0.04em;
+
+      margin-bottom: 10px;
+    }
+
+    .result-description {
+      color: #b5b5b5;
+
+      font-size: 14px;
+      line-height: 1.5;
+
+      max-width: 620px;
+    }
+
+    /* =========================
+       METRICS
+    ========================= */
+
+    .metrics {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 10px;
+
+      margin-top: 24px;
+    }
+
+    .metric {
+      background: #252525;
+
+      border-radius: 12px;
+
+      padding: 15px;
+    }
+
+    .metric-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      color: #999;
+
+      font-size: 12px;
+      line-height: 1.3;
+
+      margin-bottom: 6px;
+    }
+
+    .metric-label .tooltip {
+      width: 15px;
+      height: 15px;
+
+      flex-basis: 15px;
+
+      border-color: #666;
+      color: #aaa;
+
+      font-size: 9px;
+    }
+
+    .metric-label .tooltip-content {
+      background: #fff;
+      color: #171717;
+
+      width: 270px;
+
+      box-shadow:
+        0 8px 24px rgba(0,0,0,.25);
+    }
+
+    .metric-label .tooltip-content::after {
+      border-top-color: #fff;
+    }
+
+    .metric-label .tooltip-content strong {
+      color: #171717;
+    }
+
+    .metric-label .tooltip-content .formula {
+      color: #666;
+      border-top-color: #e5e5e5;
+    }
+
+    .metric-value {
+      font-size: 19px;
+
+      font-weight: 700;
+
+      line-height: 1.2;
+    }
+
+    /* =========================
+       EXPLANATION
+    ========================= */
+
+    .explanation {
+      margin-top: 18px;
+
+      padding-top: 18px;
+
+      border-top:
+        1px solid #353535;
+
+      color: #c7c7c7;
+
+      font-size: 13px;
+
+      line-height: 1.55;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    .footer {
+      margin-top: 18px;
+
+      text-align: center;
+
+      color: #999;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+      .page {
+        padding: 30px 16px;
+      }
+
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .fields {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .result {
+        padding: 22px;
+      }
+
+      .result-main {
+        font-size: 34px;
+      }
+
+      /*
+       * На мобильных подсказка открывается
+       * по нажатию и превращается в компактное
+       * окно по центру экрана.
+       */
+
+      .tooltip-content {
+        position: fixed;
+
+        left: 16px !important;
+        right: 16px;
+
+        bottom: auto;
+
+        top: 50%;
+
+        width: auto !important;
+
+        transform:
+          translateY(
+            calc(-50% + 6px)
+          ) !important;
+
+        margin: 0;
+
+        font-size: 13px;
+
+        box-shadow:
+          0 12px 40px rgba(0,0,0,.3);
+      }
+
+      .tooltip:hover .tooltip-content {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .tooltip.open .tooltip-content {
+        opacity: 1;
+        visibility: visible;
+
+        transform:
+          translateY(-50%) !important;
+      }
+
+      .tooltip-content::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+<main class="page">
+
+  <div class="calculator">
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header class="header">
+
+      <h1>
+        Сколько можно платить за привлечение франчайзи?
+      </h1>
+
+      <p>
+        Рассчитайте маржинальный LTV франчайзи,
+        допустимый CAC, CPL и CPQL.
+      </p>
+
+    </header>
+
+
+    <!-- =========================
+         ЭКОНОМИКА
+    ========================= -->
+
+    <section class="section">
+
+      <div class="section-title">
+        Экономика одного франчайзи
+      </div>
+
+      <div class="section-description">
+        Сначала считаем, сколько денег франчайзи приносит
+        бизнесу за весь срок работы. Затем определяем,
+        какую часть этой суммы можно инвестировать в его привлечение.
+      </div>
+
+
+      <div class="fields">
+
+        <!-- ПАУШАЛЬНЫЙ ВЗНОС -->
+
+        <div class="field">
+
+          <label for="fee">
+
+            Паушальный взнос
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о паушальном взносе"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  Паушальный взнос
+                </strong>
+
+                Разовый платёж, который франчайзи
+                вносит при покупке франшизы.
+
+                <span class="formula">
+                  В расчёте входит в маржинальный LTV
+                  как разовый доход франчайзера.
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+          <div class="input-wrapper">
+
+            <input
+              id="fee"
+              type="number"
+              min="0"
+              step="10000"
+              value="800000"
+            >
+
+            <span class="unit">
+              ₽
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ЕЖЕМЕСЯЧНЫЙ ДОХОД -->
+
+        <div class="field">
+
+          <label for="monthlyRevenue">
+
+            Ежемесячный доход от франчайзи
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о ежемесячном доходе"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  Ежемесячный доход
+                </strong>
+
+                Регулярная выручка франчайзера
+                от одного франчайзи: например,
+                роялти или другие регулярные платежи.
+
+                <span class="formula">
+                  Из этой суммы вычитаются ежемесячные
+                  затраты на сопровождение.
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+          <div class="input-wrapper">
+
+            <input
+              id="monthlyRevenue"
+              type="number"
+              min="0"
+              step="1000"
+              value="50000"
+            >
+
+            <span class="unit">
+              ₽
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ЗАТРАТЫ -->
+
+        <div class="field">
+
+          <label for="monthlyCost">
+
+            Ежемесячные затраты на сопровождение
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о ежемесячных затратах"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  Затраты на сопровождение
+                </strong>
+
+                Регулярные переменные расходы
+                франчайзера на обслуживание одного
+                франчайзи: поддержка, сервисы,
+                сопровождение и другие затраты,
+                зависящие от количества франчайзи.
+
+                <span class="formula">
+                  Маржинальный доход =
+                  ежемесячный доход − затраты.
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+          <div class="input-wrapper">
+
+            <input
+              id="monthlyCost"
+              type="number"
+              min="0"
+              step="1000"
+              value="10000"
+            >
+
+            <span class="unit">
+              ₽
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- СРОК -->
+
+        <div class="field">
+
+          <label for="months">
+
+            Средний срок работы франчайзи
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о среднем сроке работы"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  Средний срок работы франчайзи
+                </strong>
+
+                Сколько месяцев в среднем франчайзи
+                остаётся в системе.
+
+                <span class="formula">
+                  Чем дольше работает франчайзи,
+                  тем выше маржинальный LTV.
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+          <div class="input-wrapper">
+
+            <input
+              id="months"
+              type="number"
+              min="1"
+              max="120"
+              step="1"
+              value="24"
+            >
+
+            <span class="unit">
+              мес.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ДОЛЯ LTV -->
+
+        <div class="field">
+
+          <label for="share">
+
+            Доля LTV на привлечение
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о доле LTV"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  LTV — Lifetime Value,
+                  пожизненная ценность клиента
+                </strong>
+
+                Какую долю маржинального LTV
+                бизнес готов инвестировать в привлечение
+                одного нового франчайзи.
+
+                <span class="formula">
+                  CAC = маржинальный LTV × доля LTV
+                  на привлечение.
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+          <div class="input-wrapper">
+
+            <input
+              id="share"
+              type="number"
+              min="1"
+              max="100"
+              step="1"
+              value="20"
+            >
+
+            <span class="unit">
+              %
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="info-box">
+
+        <strong>
+          Маржинальный LTV:
+        </strong>
+
+        разовый доход от франчайзи +
+        (ежемесячный доход − ежемесячные затраты)
+        × средний срок работы франчайзи.
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ВОРОНКА
+    ========================= -->
+
+    <section class="section">
+
+      <div class="section-title">
+        Воронка продаж
+      </div>
+
+      <div class="section-description">
+        Теперь переводим допустимый CAC в показатели,
+        по которым можно оценивать рекламные кампании.
+      </div>
+
+
+      <div class="fields">
+
+        <!-- КОНВЕРСИЯ -->
+
+        <div class="field">
+
+          <label for="conversion">
+
+            Лид → франчайзи
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о конверсии"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  Конверсия «лид → франчайзи»
+                </strong>
+
+                Доля лидов, которые в итоге
+                становятся покупателями франшизы.
+
+                <span class="formula">
+                  Конверсия =
+                  количество франчайзи ÷ количество лидов × 100%.
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+          <div class="input-wrapper">
+
+            <input
+              id="conversion"
+              type="number"
+              min="0.01"
+              max="100"
+              step="0.1"
+              value="1"
+            >
+
+            <span class="unit">
+              %
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- КВАЛИФИКАЦИЯ -->
+
+        <div class="field">
+
+          <label for="qualification">
+
+            Доля квалифицированных лидов
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о квалифицированных лидах"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  Квалифицированный лид
+                </strong>
+
+                Лид, который соответствует вашим
+                критериям потенциального франчайзи:
+                например, подходит по бюджету,
+                региону и срокам запуска.
+
+                <span class="formula">
+                  Доля квалифицированных лидов =
+                  квалифицированные лиды ÷ все лиды × 100%.
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+          <div class="input-wrapper">
+
+            <input
+              id="qualification"
+              type="number"
+              min="0.1"
+              max="100"
+              step="1"
+              value="30"
+            >
+
+            <span class="unit">
+              %
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RESULT
+    ========================= -->
+
+    <section class="result">
+
+
+      <!-- CAC -->
+
+      <div class="result-label">
+
+        Максимальная стоимость привлечения одного франчайзи
+
+        <span
+          class="tooltip"
+          tabindex="0"
+          role="button"
+          aria-label="Подсказка о CAC"
+        >
+
+          ?
+
+          <span class="tooltip-content">
+
+            <strong>
+              CAC — Customer Acquisition Cost,
+              стоимость привлечения клиента
+            </strong>
+
+            В данном калькуляторе —
+            максимально допустимая стоимость
+            привлечения одного франчайзи.
+
+            <span class="formula">
+              CAC = маржинальный LTV × доля LTV
+              на привлечение.
+            </span>
+
+          </span>
+
+        </span>
+
+      </div>
+
+
+      <div
+        class="result-main"
+        id="cac"
+      >
+        352 000 ₽
+      </div>
+
+
+      <div class="result-description">
+
+        Это ориентир по максимально допустимым
+        затратам на привлечение одного нового франчайзи
+        при заданной экономике.
+
+      </div>
+
+
+      <!-- METRICS -->
+
+      <div class="metrics">
+
+
+        <!-- LTV -->
+
+        <div class="metric">
+
+          <div class="metric-label">
+
+            Маржинальный LTV
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о LTV"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  LTV — Lifetime Value,
+                  пожизненная ценность клиента
+                </strong>
+
+                Суммарный маржинальный доход,
+                который один франчайзи приносит
+                за весь расчётный срок.
+
+                <span class="formula">
+                  LTV = паушальный взнос +
+                  (ежемесячный доход − затраты)
+                  × срок работы.
+                </span>
+
+              </span>
+
+            </span>
+
+          </div>
+
+
+          <div
+            class="metric-value"
+            id="ltv"
+          >
+            1 760 000 ₽
+          </div>
+
+        </div>
+
+
+        <!-- CPL -->
+
+        <div class="metric">
+
+          <div class="metric-label">
+
+            Допустимый CPL
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о CPL"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  CPL — Cost Per Lead,
+                  стоимость лида
+                </strong>
+
+                Максимальная стоимость одного
+                лида, при которой привлечение
+                укладывается в заданный CAC.
+
+                <span class="formula">
+                  CPL = CAC ÷ количество лидов
+                  на одного франчайзи.<br><br>
+                  Лиды на одного франчайзи =
+                  100% ÷ конверсия «лид → франчайзи».
+                </span>
+
+              </span>
+
+            </span>
+
+          </div>
+
+
+          <div
+            class="metric-value"
+            id="cpl"
+          >
+            3 520 ₽
+          </div>
+
+        </div>
+
+
+        <!-- CPQL -->
+
+        <div class="metric">
+
+          <div class="metric-label">
+
+            Допустимый CPQL
+
+            <span
+              class="tooltip"
+              tabindex="0"
+              role="button"
+              aria-label="Подсказка о CPQL"
+            >
+
+              ?
+
+              <span class="tooltip-content">
+
+                <strong>
+                  CPQL — Cost Per Qualified Lead,
+                  стоимость квалифицированного лида
+                </strong>
+
+                Максимальная стоимость одного
+                квалифицированного лида.
+
+                <span class="formula">
+                  CPQL = CPL ÷ доля
+                  квалифицированных лидов.
+                </span>
+
+              </span>
+
+            </span>
+
+          </div>
+
+
+          <div
+            class="metric-value"
+            id="cpql"
+          >
+            11 733 ₽
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- EXPLANATION -->
+
+      <div
+        class="explanation"
+        id="explanation"
+      >
+        При конверсии лида во франчайзи 1%
+        один проданный франчайзи требует
+        в среднем 100 лидов.
+        Поэтому допустимый CPL —
+        около 3 520 ₽.
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <div class="footer">
+
+      Калькулятор помогает оценить экономику
+      привлечения франчайзи до запуска рекламной кампании.
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<script>
+
+  /* =========================
+     ПОЛУЧЕНИЕ ЗНАЧЕНИЯ
+  ========================= */
+
+  function getValue(id) {
+
+    const element =
+      document.getElementById(id);
+
+    const value =
+      parseFloat(element.value);
+
+    if (
+      !Number.isFinite(value) ||
+      value < 0
+    ) {
+      return 0;
+    }
+
+    return value;
+  }
+
+
+  /* =========================
+     ФОРМАТИРОВАНИЕ ДЕНЕГ
+  ========================= */
+
+  function formatMoney(value) {
+
+    if (!Number.isFinite(value)) {
+      return "—";
+    }
+
+    return (
+      Math.round(value)
+        .toLocaleString("ru-RU") +
+      " ₽"
+    );
+  }
+
+
+  /* =========================
+     ОСНОВНОЙ РАСЧЁТ
+  ========================= */
+
+  function calculate() {
+
+    const fee =
+      getValue("fee");
+
+
+    const monthlyRevenue =
+      getValue("monthlyRevenue");
+
+
+    const monthlyCost =
+      getValue("monthlyCost");
+
+
+    const months =
+      Math.max(
+        1,
+        getValue("months")
+      );
+
+
+    const share =
+      Math.min(
+        100,
+        Math.max(
+          0,
+          getValue("share")
+        )
+      );
+
+
+    const conversion =
+      getValue("conversion");
+
+
+    const qualification =
+      getValue("qualification");
+
+
+    /*
+     * МАРЖИНАЛЬНЫЙ ДОХОД
+     *
+     * Ежемесячный доход
+     * минус переменные затраты
+     */
+
+    const monthlyMargin =
+      Math.max(
+        0,
+        monthlyRevenue -
+        monthlyCost
+      );
+
+
+    /*
+     * МАРЖИНАЛЬНЫЙ LTV
+     *
+     * Паушальный взнос
+     * +
+     * маржинальный доход × срок
+     */
+
+    const ltv =
+      fee +
+      monthlyMargin * months;
+
+
+    /*
+     * ДОПУСТИМЫЙ CAC
+     *
+     * LTV × доля на привлечение
+     */
+
+    const cac =
+      ltv *
+      share /
+      100;
+
+
+    /*
+     * ЛИДЫ НА ОДНОГО ФРАНЧАЙЗИ
+     */
+
+    let leadsPerFranchise = 0;
+
+    if (conversion > 0) {
+
+      leadsPerFranchise =
+        100 /
+        conversion;
+
+    }
+
+
+    /*
+     * ДОПУСТИМЫЙ CPL
+     *
+     * CAC / количество лидов
+     */
+
+    let cpl = 0;
+
+    if (
+      leadsPerFranchise > 0
+    ) {
+
+      cpl =
+        cac /
+        leadsPerFranchise;
+
+    }
+
+
+    /*
+     * ДОПУСТИМЫЙ CPQL
+     *
+     * CPL / доля квалифицированных лидов
+     */
+
+    let cpql = 0;
+
+    if (
+      qualification > 0
+    ) {
+
+      cpql =
+        cpl /
+        (qualification / 100);
+
+    }
+
+
+    /*
+     * ВЫВОД
+     */
+
+    document.getElementById(
+      "ltv"
+    ).textContent =
+      formatMoney(ltv);
+
+
+    document.getElementById(
+      "cac"
+    ).textContent =
+      formatMoney(cac);
+
+
+    document.getElementById(
+      "cpl"
+    ).textContent =
+      formatMoney(cpl);
+
+
+    document.getElementById(
+      "cpql"
+    ).textContent =
+      formatMoney(cpql);
+
+
+    /*
+     * ПОЯСНЕНИЕ
+     */
+
+    const explanation =
+      document.getElementById(
+        "explanation"
+      );
+
+
+    if (conversion > 0) {
+
+      const leads =
+        Math.round(
+          leadsPerFranchise
+        );
+
+
+      explanation.textContent =
+        "При конверсии лида во франчайзи " +
+        String(conversion).replace(".", ",") +
+        "% один проданный франчайзи требует " +
+        leads.toLocaleString("ru-RU") +
+        " лидов. Поэтому допустимый CPL — около " +
+        formatMoney(cpl) +
+        ".";
+
+    }
+
+    else {
+
+      explanation.textContent =
+        "Укажите конверсию лида во франчайзи " +
+        "больше 0%, чтобы рассчитать допустимый CPL.";
+
+    }
+
+  }
+
+
+  /* =========================
+     ПЕРЕСЧЁТ ПРИ ИЗМЕНЕНИИ
+  ========================= */
+
+  const inputIds = [
+
+    "fee",
+    "monthlyRevenue",
+    "monthlyCost",
+    "months",
+    "share",
+    "conversion",
+    "qualification"
+
+  ];
+
+
+  inputIds.forEach(function(id) {
+
+    document
+      .getElementById(id)
+      .addEventListener(
+        "input",
+        calculate
+      );
+
+  });
+
+
+  /* =========================
+     МОБИЛЬНЫЕ ПОДСКАЗКИ
+  ========================= */
+
+  const tooltips =
+    document.querySelectorAll(
+      ".tooltip"
+    );
+
+
+  tooltips.forEach(function(tooltip) {
+
+    tooltip.addEventListener(
+      "click",
+      function(event) {
+
+        event.stopPropagation();
+
+
+        tooltips.forEach(
+          function(other) {
+
+            if (
+              other !== tooltip
+            ) {
+
+              other.classList.remove(
+                "open"
+              );
+
+            }
+
+          }
+        );
+
+
+        tooltip.classList.toggle(
+          "open"
+        );
+
+      }
+    );
+
+  });
+
+
+  /* =========================
+     ЗАКРЫТИЕ ПОДСКАЗКИ
+     ========================= */
+
+  document.addEventListener(
+    "click",
+    function() {
+
+      tooltips.forEach(
+        function(tooltip) {
+
+          tooltip.classList.remove(
+            "open"
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+  /* =========================
+     ПЕРВЫЙ РАСЧЁТ
+  ========================= */
+
+  calculate();
+
+</script>
+
+</body>
+</html>
