@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Калькулятор экономики привлечения франчайзи от Никиты Кравченко</title>
+  <title>Калькулятор экономики привлечения франчайзи</title>
 
   <style>
     * {
@@ -140,6 +140,128 @@
       line-height: 1.4;
     }
 
+    /* ===== Слайдер доли LTV на привлечение ===== */
+
+    .slider-block {
+      padding: 16px 18px 18px;
+      border: 1px solid #e5e5e5;
+      border-radius: 16px;
+      background: #fafafa;
+    }
+
+    .slider-value {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 4px;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1;
+      color: #111;
+      letter-spacing: -1px;
+    }
+
+    .slider-value-unit {
+      font-size: 20px;
+      font-weight: 600;
+      color: #666;
+      letter-spacing: 0;
+    }
+
+    .slider-caption {
+      margin-bottom: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+    }
+
+    input.slider {
+      -webkit-appearance: none;
+      appearance: none;
+      display: block;
+      width: 100%;
+      height: 6px;
+      padding: 0;
+      margin: 0;
+      border: none;
+      border-radius: 3px;
+      background: #e0e0e0;
+      outline: none;
+      box-shadow: none;
+      cursor: pointer;
+    }
+
+    input.slider:focus {
+      box-shadow: none;
+    }
+
+    input.slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+
+    input.slider::-webkit-slider-thumb:hover {
+      transform: scale(1.08);
+    }
+
+    input.slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+    }
+
+    input.slider::-moz-range-track {
+      height: 6px;
+      border-radius: 3px;
+      background: #e0e0e0;
+    }
+
+    .slider-presets {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .slider-presets button {
+      padding: 9px 0;
+      border: 1px solid #d8d8d8;
+      border-radius: 10px;
+      background: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .slider-presets button:hover {
+      border-color: #111;
+      color: #111;
+    }
+
+    .slider-presets button.active {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+    }
+
+    /* ===== Результаты ===== */
+
     .results {
       margin-top: 32px;
       padding: 24px;
@@ -251,6 +373,10 @@
       .metric-label {
         min-height: auto;
       }
+
+      .slider-value {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
@@ -265,7 +391,7 @@
 
       <p class="subtitle">
         Рассчитайте допустимую стоимость привлечения франчайзи,
-        квалифицированного лида и обычного лида из рекламы.
+        квалифицированного лида и обычного лида.
       </p>
 
       <!-- Экономика франшизы -->
@@ -389,26 +515,54 @@
           </div>
         </div>
 
+        <!-- Слайдер: доля LTV на привлечение -->
         <div class="field">
           <label for="acquisitionShare">
-            Доля LTV на привлечение, %
+            Доля LTV на привлечение
             <span class="tooltip">
               ?
               <span class="tooltip-text">
                 Какую долю маржинального LTV вы готовы направлять
-                на привлечение нового франчайзи.
+                на привлечение нового франчайзи. 15–25% — консервативно,
+                30–40% — агрессивный рост.
               </span>
             </span>
           </label>
 
-          <input
-            id="acquisitionShare"
-            type="number"
-            min="0"
-            max="100"
-            step="0.1"
-            value="20"
-          />
+          <div class="slider-block">
+
+            <div class="slider-value">
+              <span id="acquisitionShareValue">20</span>
+              <span class="slider-value-unit">%</span>
+            </div>
+
+            <div class="slider-caption">
+              от маржинального LTV
+            </div>
+
+            <input
+              id="acquisitionShare"
+              type="range"
+              class="slider"
+              min="5"
+              max="50"
+              step="1"
+              value="20"
+            />
+
+            <div class="slider-presets">
+              <button type="button" data-value="10">10%</button>
+              <button type="button" data-value="20">20%</button>
+              <button type="button" data-value="30">30%</button>
+              <button type="button" data-value="40">40%</button>
+            </div>
+
+          </div>
+
+          <div class="hint">
+            Чем выше доля — тем больше вы готовы платить за привлечение
+            и тем агрессивнее можете масштабироваться.
+          </div>
         </div>
 
       </section>
@@ -438,11 +592,11 @@
             min="0.01"
             max="100"
             step="0.1"
-            value="10"
+            value="7"
           />
 
           <div class="hint">
-            Например, 10% означает: из 10 квалифицированных лидов
+            Например, 7% означает: из 7 квалифицированных лидов
             в среднем получается 1 франчайзи.
           </div>
         </div>
@@ -466,11 +620,11 @@
             min="0.01"
             max="100"
             step="0.1"
-            value="30"
+            value="20"
           />
 
           <div class="hint">
-            Например, 30% означает: из 100 лидов 30 становятся
+            Например, 20% означает: из 100 лидов 20 становятся
             квалифицированными.
           </div>
         </div>
@@ -654,6 +808,7 @@
       const number = parseFloat(value);
 
       return Number.isFinite(number) ? number : 0;
+
     }
 
 
@@ -693,6 +848,67 @@
 
     }
 
+
+    // ===== Слайдер доли LTV на привлечение =====
+
+    const acquisitionShareInput =
+      document.getElementById("acquisitionShare");
+
+    const acquisitionShareValue =
+      document.getElementById("acquisitionShareValue");
+
+    const presetButtons =
+      document.querySelectorAll(".slider-presets button");
+
+
+    function updateAcquisitionShareUI() {
+
+      const currentValue = String(acquisitionShareInput.value);
+
+      acquisitionShareValue.textContent = currentValue;
+
+      presetButtons.forEach((button) => {
+
+        const isActive =
+          button.dataset.value === currentValue;
+
+        button.classList.toggle("active", isActive);
+
+      });
+
+    }
+
+
+    // Слайдер: обновляем подпись, подсветку пресетов И пересчитываем метрики
+
+    acquisitionShareInput.addEventListener("input", () => {
+
+      updateAcquisitionShareUI();
+
+      calculate();
+
+    });
+
+
+    // Пресеты: подставляем значение, обновляем UI и считаем
+
+    presetButtons.forEach((button) => {
+
+      button.addEventListener("click", () => {
+
+        acquisitionShareInput.value =
+          button.dataset.value;
+
+        updateAcquisitionShareUI();
+
+        calculate();
+
+      });
+
+    });
+
+
+    // ===== Расчёт =====
 
     function calculate() {
 
@@ -865,7 +1081,7 @@
     });
 
 
-    // Все остальные поля
+    // Все остальные поля (кроме слайдера и денежных)
 
     const allInputs =
       document.querySelectorAll("input");
@@ -874,6 +1090,10 @@
     allInputs.forEach((input) => {
 
       if (moneyInputs.includes(input.id)) {
+        return;
+      }
+
+      if (input.id === "acquisitionShare") {
         return;
       }
 
@@ -886,6 +1106,8 @@
 
 
     // Первый расчет
+
+    updateAcquisitionShareUI();
 
     calculate();
 
