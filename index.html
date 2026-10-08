@@ -95,7 +95,7 @@
       left: 50%;
       bottom: calc(100% + 8px);
       transform: translateX(-50%);
-      width: 250px;
+      width: 260px;
       padding: 10px 12px;
       border-radius: 10px;
       background: #222;
@@ -265,7 +265,7 @@
 
       <p class="subtitle">
         Рассчитайте допустимую стоимость привлечения франчайзи,
-        квалифицированного лида и обычного лида.
+        квалифицированного лида и обычного лида из рекламы.
       </p>
 
       <!-- Экономика франшизы -->
@@ -293,26 +293,51 @@
         </div>
 
         <div class="field">
-          <label for="monthlyRevenue">
-            Ежемесячная выручка франчайзи
+          <label for="monthlyTurnover">
+            Средний оборот франчайзи в месяц
           </label>
 
           <input
-            id="monthlyRevenue"
+            id="monthlyTurnover"
             type="text"
             inputmode="numeric"
-            value="50 000"
+            value="1 500 000"
           />
 
           <div class="hint">
-            Средняя ежемесячная выручка или доход управляющей компании
-            от одного франчайзи.
+            Средний ежемесячный оборот одной точки франчайзи.
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="royaltyRate">
+            Роялти, % от оборота
+            <span class="tooltip">
+              ?
+              <span class="tooltip-text">
+                Доля оборота франчайзи, которую получает управляющая компания
+                в виде роялти.
+              </span>
+            </span>
+          </label>
+
+          <input
+            id="royaltyRate"
+            type="number"
+            min="0"
+            max="100"
+            step="0.1"
+            value="5"
+          />
+
+          <div class="hint">
+            Например, 5% означает: при обороте 1,5 млн ₽ роялти составляет 75 000 ₽ в месяц.
           </div>
         </div>
 
         <div class="field">
           <label for="monthlyCost">
-            Ежемесячные переменные расходы
+            Расходы на поддержку франчайзи в месяц
           </label>
 
           <input
@@ -323,7 +348,7 @@
           />
 
           <div class="hint">
-            Средние ежемесячные расходы на поддержку одного франчайзи.
+            Средние ежемесячные расходы управляющей компании на одного франчайзи.
           </div>
         </div>
 
@@ -338,6 +363,30 @@
             min="1"
             value="24"
           />
+        </div>
+
+        <div class="field">
+          <label for="royaltyDelay">
+            Отсрочка роялти, месяцев
+            <span class="tooltip">
+              ?
+              <span class="tooltip-text">
+                Сколько месяцев после запуска франчайзи роялти не начисляется.
+                0 — роялти с первого месяца, 3 — с четвертого.
+              </span>
+            </span>
+          </label>
+
+          <input
+            id="royaltyDelay"
+            type="number"
+            min="0"
+            value="3"
+          />
+
+          <div class="hint">
+            0 — роялти с первого месяца. 3 — роялти начинается с четвертого месяца.
+          </div>
         </div>
 
         <div class="field">
@@ -444,7 +493,7 @@
               class="metric-value"
               id="ltvResult"
             >
-              1 760 000 ₽
+              2 135 000 ₽
             </div>
 
           </div>
@@ -468,7 +517,7 @@
               class="metric-value"
               id="cacResult"
             >
-              352 000 ₽
+              427 000 ₽
             </div>
 
           </div>
@@ -492,7 +541,7 @@
               class="metric-value"
               id="cpqlResult"
             >
-              35 200 ₽
+              42 700 ₽
             </div>
 
           </div>
@@ -516,7 +565,7 @@
               class="metric-value"
               id="cplResult"
             >
-              10 560 ₽
+              12 810 ₽
             </div>
 
           </div>
@@ -529,7 +578,7 @@
         >
           При текущих параметрах 100 лидов дают 30 квалифицированных
           лидов, из которых в среднем 3 становятся франчайзи.
-          Поэтому допустимый CPL — около 10 560 ₽.
+          Поэтому допустимый CPL — около 12 810 ₽.
         </div>
 
       </section>
@@ -544,9 +593,14 @@
         <div class="formula-list">
 
           <div>
+            <strong>Роялти за срок жизни</strong>
+            = средний оборот × ставка роялти × количество месяцев с роялти
+          </div>
+
+          <div>
             <strong>Маржинальный LTV</strong>
-            = паушальный взнос + (ежемесячная выручка −
-            ежемесячные расходы) × срок жизни франчайзи
+            = паушальный взнос + роялти за срок жизни −
+            расходы на поддержку за срок жизни
           </div>
 
           <div>
@@ -647,14 +701,20 @@
       const franchiseFee =
         getValue("franchiseFee");
 
-      const monthlyRevenue =
-        getValue("monthlyRevenue");
+      const monthlyTurnover =
+        getValue("monthlyTurnover");
+
+      const royaltyRate =
+        getValue("royaltyRate");
 
       const monthlyCost =
         getValue("monthlyCost");
 
       const lifetime =
         getValue("lifetime");
+
+      const royaltyDelay =
+        getValue("royaltyDelay");
 
       const acquisitionShare =
         getValue("acquisitionShare");
@@ -669,26 +729,49 @@
         getValue("qualification");
 
 
-      // Маржинальный доход в месяц
+      // Количество месяцев, когда реально начисляется роялти
 
-      const monthlyMargin =
+      const royaltyMonths =
         Math.max(
           0,
-          monthlyRevenue - monthlyCost
+          lifetime - royaltyDelay
         );
+
+
+      // Роялти с одного франчайзи за весь срок жизни
+
+      const totalRoyalty =
+        monthlyTurnover *
+        royaltyRate /
+        100 *
+        royaltyMonths;
+
+
+      // Расходы на поддержку за весь срок жизни
+
+      const totalSupportCost =
+        monthlyCost *
+        lifetime;
 
 
       // Маржинальный LTV
 
       const ltv =
         franchiseFee +
-        monthlyMargin * lifetime;
+        totalRoyalty -
+        totalSupportCost;
+
+
+      // Не допускаем отрицательный LTV
+
+      const positiveLtv =
+        Math.max(0, ltv);
 
 
       // Допустимый CAC
 
       const cac =
-        ltv *
+        positiveLtv *
         acquisitionShare /
         100;
 
@@ -712,7 +795,7 @@
       // Обновляем результаты
 
       document.getElementById("ltvResult").textContent =
-        formatMoney(ltv);
+        formatMoney(positiveLtv);
 
       document.getElementById("cacResult").textContent =
         formatMoney(cac);
@@ -751,7 +834,7 @@
 
     const moneyInputs = [
       "franchiseFee",
-      "monthlyRevenue",
+      "monthlyTurnover",
       "monthlyCost"
     ];
 
