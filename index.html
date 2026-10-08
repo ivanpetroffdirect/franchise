@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Калькулятор экономики привлечения франчайзи</title>
+  <title>Калькулятор экономики привлечения франчайзи от Никиты Кравченко</title>
 
   <style>
     * {
@@ -52,9 +52,16 @@
     }
 
     .section-title {
-      margin-bottom: 16px;
+      margin-bottom: 6px;
       font-size: 18px;
       font-weight: 700;
+    }
+
+    .section-note {
+      margin: 0 0 16px;
+      font-size: 12px;
+      color: #999;
+      line-height: 1.5;
     }
 
     .field {
@@ -138,6 +145,94 @@
       color: #888;
       font-size: 12px;
       line-height: 1.4;
+    }
+
+    /* ===== Статус и пресеты для полей воронки ===== */
+
+    .field-status {
+      margin-top: 12px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-below {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+    .status-below::before {
+      background: #dc2626;
+    }
+
+    .status-conservative {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+    .status-conservative::before {
+      background: #f97316;
+    }
+
+    .status-standard {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+    .status-standard::before {
+      background: #6366f1;
+    }
+
+    .status-target {
+      background: #ecfdf5;
+      color: #065f46;
+    }
+    .status-target::before {
+      background: #10b981;
+    }
+
+    .status-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .status-presets button {
+      padding: 6px 11px;
+      border: 1px solid #e0e0e0;
+      border-radius: 9px;
+      background: #fff;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 500;
+      color: #666;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .status-presets button:hover {
+      border-color: #999;
+      color: #111;
+    }
+
+    .status-presets button.active {
+      background: #111;
+      border-color: #111;
+      color: #fff;
     }
 
     /* ===== Слайдер доли LTV на привлечение ===== */
@@ -309,6 +404,120 @@
       line-height: 1.55;
     }
 
+    /* ===== Блок сравнения ===== */
+
+    .comparison {
+      margin-top: 32px;
+      padding: 24px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+    }
+
+    .comparison-title {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .comparison-subtitle {
+      margin: 0 0 20px;
+      font-size: 13px;
+      color: #777;
+      line-height: 1.55;
+    }
+
+    .comparison-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 4px;
+      background: #f3f3f3;
+      border-radius: 12px;
+      margin-bottom: 18px;
+    }
+
+    .comparison-tabs button {
+      padding: 10px 0;
+      border: none;
+      background: transparent;
+      border-radius: 9px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .comparison-tabs button:hover {
+      color: #111;
+    }
+
+    .comparison-tabs button.active {
+      background: #fff;
+      color: #111;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .comparison-result {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #f8f8f8;
+      transition: background 0.2s ease;
+    }
+
+    .comparison-result[hidden] {
+      display: none;
+    }
+
+    .comparison-result.verdict-excellent { background: #ecfdf5; }
+    .comparison-result.verdict-good { background: #f0f9ff; }
+    .comparison-result.verdict-edge { background: #fff7ed; }
+    .comparison-result.verdict-loss { background: #fef2f2; }
+
+    .comparison-rows {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .comparison-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .comparison-row-label {
+      color: #666;
+    }
+
+    .comparison-row-value {
+      font-weight: 700;
+      color: #111;
+      white-space: nowrap;
+    }
+
+    .comparison-verdict {
+      padding-top: 14px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 13px;
+      line-height: 1.55;
+      color: #333;
+    }
+
+    .comparison-verdict-title {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* ===== Формулы ===== */
+
     .formula {
       margin-top: 28px;
       padding-top: 22px;
@@ -387,11 +596,11 @@
 
     <main class="calculator">
 
-      <h1>Калькулятор экономики привлечения франчайзи</h1>
+      <h1>Калькулятор экономики привлечения франчайзи от Никиты Кравченко</h1>
 
       <p class="subtitle">
         Рассчитайте допустимую стоимость привлечения франчайзи,
-        квалифицированного лида и обычного лида.
+        квалифицированного лида и обычного лида из рекламы.
       </p>
 
       <!-- Экономика франшизы -->
@@ -574,6 +783,46 @@
           Воронка продаж
         </div>
 
+        <p class="section-note">
+          Ориентиры основаны на отраслевых данных AFDR и Franchise Update Media за 2025–2026.
+        </p>
+
+        <div class="field">
+          <label for="qualification">
+            Лид → Квалифицированный лид
+            <span class="tooltip">
+              ?
+              <span class="tooltip-text">
+                Какой процент всех полученных лидов проходит
+                первичную квалификацию и соответствует требованиям
+                потенциального франчайзи.
+              </span>
+            </span>
+          </label>
+
+          <input
+            id="qualification"
+            type="number"
+            min="0.01"
+            max="100"
+            step="0.1"
+            value="20"
+          />
+
+          <div class="hint">
+            Например, 20% означает: из 5 лидов 1 становится квалифицированным.
+          </div>
+
+          <div class="field-status">
+            <span class="status-badge status-standard" id="qualificationStatus"></span>
+            <div class="status-presets">
+              <button type="button" data-target="qualification" data-value="15">Консервативный · 15%</button>
+              <button type="button" data-target="qualification" data-value="20">Стандарт · 20%</button>
+              <button type="button" data-target="qualification" data-value="25">Целевой · 25%</button>
+            </div>
+          </div>
+        </div>
+
         <div class="field">
           <label for="qualifiedConversion">
             Квалифицированный лид → Франчайзи
@@ -599,33 +848,14 @@
             Например, 10% означает: из 10 квалифицированных лидов
             в среднем получается 1 франчайзи.
           </div>
-        </div>
 
-        <div class="field">
-          <label for="qualification">
-            Лид → Квалифицированный лид
-            <span class="tooltip">
-              ?
-              <span class="tooltip-text">
-                Какой процент всех полученных лидов проходит
-                первичную квалификацию и соответствует требованиям
-                потенциального франчайзи.
-              </span>
-            </span>
-          </label>
-
-          <input
-            id="qualification"
-            type="number"
-            min="0.01"
-            max="100"
-            step="0.1"
-            value="20"
-          />
-
-          <div class="hint">
-            Например, 20% означает: из 100 лидов 20 становятся
-            квалифицированными.
+          <div class="field-status">
+            <span class="status-badge status-standard" id="qualifiedConversionStatus"></span>
+            <div class="status-presets">
+              <button type="button" data-target="qualifiedConversion" data-value="7">Консервативный · 7%</button>
+              <button type="button" data-target="qualifiedConversion" data-value="10">Стандарт · 10%</button>
+              <button type="button" data-target="qualifiedConversion" data-value="12">Целевой · 12%</button>
+            </div>
           </div>
         </div>
 
@@ -719,7 +949,7 @@
               class="metric-value"
               id="cplResult"
             >
-              12 810 ₽
+              8 540 ₽
             </div>
 
           </div>
@@ -730,10 +960,51 @@
           class="explanation"
           id="explanation"
         >
-          При текущих параметрах 100 лидов дают 30 квалифицированных
-          лидов, из которых в среднем 3 становятся франчайзи.
-          Поэтому допустимый CPL — около 12 810 ₽.
+          При текущих параметрах 100 лидов дают 20 квалифицированных
+          лидов, из которых в среднем 2 становятся франчайзи.
+          Поэтому допустимый CPL — около 8 540 ₽.
         </div>
+
+      </section>
+
+      <!-- Сравнение с вашими показателями -->
+      <section class="comparison">
+
+        <h2 class="comparison-title">
+          Сравните со своими показателями
+        </h2>
+
+        <p class="comparison-subtitle">
+          Введите свой фактический CAC, CPQL или CPL — и посмотрите,
+          укладываетесь ли вы в экономику франшизы.
+        </p>
+
+        <div class="comparison-tabs">
+          <button type="button" data-metric="cac" class="active">CAC</button>
+          <button type="button" data-metric="cpql">CPQL</button>
+          <button type="button" data-metric="cpl">CPL</button>
+        </div>
+
+        <div class="field">
+          <label for="userValue">
+            Ваш текущий
+            <span id="comparisonMetricLabel">CAC</span>
+          </label>
+
+          <input
+            id="userValue"
+            type="text"
+            inputmode="numeric"
+            placeholder="Например, 85 000"
+          />
+
+          <div class="hint">
+            Если не знаете точную цифру — возьмите среднее
+            за последние 3 месяца.
+          </div>
+        </div>
+
+        <div class="comparison-result" id="comparisonResult" hidden></div>
 
       </section>
 
@@ -849,6 +1120,137 @@
     }
 
 
+    // Разбор денежного значения из DOM (например, "427 000 ₽" → 427000)
+
+    function parseMoneyFromText(text) {
+
+      const cleaned = text.replace(/[^\d]/g, "");
+
+      const number = parseInt(cleaned, 10);
+
+      return Number.isFinite(number) ? number : 0;
+
+    }
+
+
+    // ===== Конфигурация сценариев для полей воронки =====
+
+    const scenarioConfigs = {
+
+      qualification: {
+        belowThreshold: 13,
+        conservativeEnd: 17,
+        standardEnd: 22,
+        labels: {
+          below: "Ниже рынка",
+          conservative: "Консервативный сценарий",
+          standard: "Отраслевой стандарт",
+          target: "Целевой уровень"
+        }
+      },
+
+      qualifiedConversion: {
+        belowThreshold: 6,
+        conservativeEnd: 8,
+        standardEnd: 11,
+        labels: {
+          below: "Ниже рынка",
+          conservative: "Консервативный сценарий",
+          standard: "Отраслевой стандарт",
+          target: "Целевой уровень"
+        }
+      }
+
+    };
+
+
+    function updateStatusForField(fieldId) {
+
+      const config = scenarioConfigs[fieldId];
+
+      if (!config) {
+        return;
+      }
+
+      const value = getValue(fieldId);
+
+      const badge = document.getElementById(fieldId + "Status");
+
+      if (!badge) {
+        return;
+      }
+
+      let statusClass, statusText;
+
+      if (value < config.belowThreshold) {
+        statusClass = "status-below";
+        statusText = config.labels.below;
+      } else if (value <= config.conservativeEnd) {
+        statusClass = "status-conservative";
+        statusText = config.labels.conservative;
+      } else if (value <= config.standardEnd) {
+        statusClass = "status-standard";
+        statusText = config.labels.standard;
+      } else {
+        statusClass = "status-target";
+        statusText = config.labels.target;
+      }
+
+      badge.className = "status-badge " + statusClass;
+      badge.textContent = statusText;
+
+
+      const presetsContainer =
+        badge.parentElement.querySelector(".status-presets");
+
+      if (presetsContainer) {
+
+        presetsContainer
+          .querySelectorAll("button")
+          .forEach((button) => {
+
+            const presetValue =
+              parseFloat(button.dataset.value);
+
+            const isActive =
+              Math.abs(presetValue - value) < 0.05;
+
+            button.classList.toggle("active", isActive);
+
+          });
+
+      }
+
+    }
+
+
+    // ===== Пресеты для полей воронки =====
+
+    document
+      .querySelectorAll(".status-presets button")
+      .forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+          const targetId = button.dataset.target;
+
+          const value = button.dataset.value;
+
+          const input = document.getElementById(targetId);
+
+          if (input) {
+
+            input.value = value;
+
+            calculate();
+
+          }
+
+        });
+
+      });
+
+
     // ===== Слайдер доли LTV на привлечение =====
 
     const acquisitionShareInput =
@@ -879,8 +1281,6 @@
     }
 
 
-    // Слайдер: обновляем подпись, подсветку пресетов И пересчитываем метрики
-
     acquisitionShareInput.addEventListener("input", () => {
 
       updateAcquisitionShareUI();
@@ -889,8 +1289,6 @@
 
     });
 
-
-    // Пресеты: подставляем значение, обновляем UI и считаем
 
     presetButtons.forEach((button) => {
 
@@ -908,11 +1306,244 @@
     });
 
 
+    // ===== Блок сравнения с фактическими показателями =====
+
+    let comparisonMetric = "cac";
+
+    const userValueInput =
+      document.getElementById("userValue");
+
+    const comparisonResult =
+      document.getElementById("comparisonResult");
+
+    const comparisonMetricLabel =
+      document.getElementById("comparisonMetricLabel");
+
+    const comparisonTabs =
+      document.querySelectorAll(".comparison-tabs button");
+
+
+    const metricConfig = {
+
+      cac: {
+        name: "CAC",
+        resultId: "cacResult",
+        genitive: "привлечение одного франчайзи"
+      },
+
+      cpql: {
+        name: "CPQL",
+        resultId: "cpqlResult",
+        genitive: "квалифицированного лида"
+      },
+
+      cpl: {
+        name: "CPL",
+        resultId: "cplResult",
+        genitive: "обычного лида"
+      }
+
+    };
+
+
+    function updateComparison() {
+
+      const userValue = getValue("userValue");
+
+
+      // Если пользователь ничего не ввёл — блок скрыт
+
+      if (!userValue || userValue <= 0) {
+
+        comparisonResult.hidden = true;
+
+        comparisonResult.className = "comparison-result";
+
+        return;
+
+      }
+
+
+      const config = metricConfig[comparisonMetric];
+
+      const calculatedElement =
+        document.getElementById(config.resultId);
+
+      const calculated =
+        parseMoneyFromText(calculatedElement.textContent);
+
+
+      // Если допустимое значение = 0, сравнение не имеет смысла
+
+      if (calculated <= 0) {
+
+        comparisonResult.hidden = false;
+
+        comparisonResult.className = "comparison-result verdict-loss";
+
+        comparisonResult.innerHTML =
+          `<div class="comparison-verdict">` +
+          `<span class="comparison-verdict-title">Нечего сравнивать</span>` +
+          `Допустимый ${config.name} равен 0 — проверьте заполнение полей ` +
+          `экономики франшизы и воронки.` +
+          `</div>`;
+
+        return;
+
+      }
+
+
+      const ratio = userValue / calculated;
+
+      const diff = userValue - calculated;
+
+      const diffPercent = (ratio - 1) * 100;
+
+
+      let verdictClass, verdictTitle, verdictText;
+
+
+      if (ratio <= 0.7) {
+
+        verdictClass = "verdict-excellent";
+        verdictTitle = "Отличный запас";
+
+        verdictText =
+          `Вы тратите на ${config.genitive} на ` +
+          `${formatMoney(Math.abs(diff))} меньше допустимого ` +
+          `(запас ${Math.round((1 - ratio) * 100)}%). ` +
+          `Можно масштабировать трафик и тестировать новые каналы.`;
+
+      } else if (ratio < 1) {
+
+        verdictClass = "verdict-good";
+        verdictTitle = "Укладываетесь в экономику";
+
+        verdictText =
+          `Вы тратите на ${config.genitive} на ` +
+          `${formatMoney(Math.abs(diff))} меньше допустимого ` +
+          `(запас ${Math.round((1 - ratio) * 100)}%). ` +
+          `Запас есть, но он небольшой — осторожно масштабируйте ` +
+          `и следите за ростом стоимости.`;
+
+      } else if (ratio <= 1.15) {
+
+        verdictClass = "verdict-edge";
+        verdictTitle = "На грани";
+
+        verdictText =
+          `Вы тратите на ${config.genitive} на ` +
+          `${formatMoney(diff)} больше допустимого ` +
+          `(${Math.round(diffPercent)}%). Запаса нет — любое подорожание ` +
+          `трафика уведёт вас в убыток. Пора оптимизировать воронку ` +
+          `или пересматривать экономику.`;
+
+      } else {
+
+        verdictClass = "verdict-loss";
+        verdictTitle = "Экономика не сходится";
+
+        verdictText =
+          `Вы тратите на ${config.genitive} на ` +
+          `${formatMoney(diff)} больше допустимого ` +
+          `(${Math.round(diffPercent)}%). При текущей экономике ` +
+          `каждый новый франчайзи приносит убыток. ` +
+          `Реклама тут не поможет — сначала нужно менять экономику ` +
+          `франшизы или повышать конверсии.`;
+
+      }
+
+
+      comparisonResult.hidden = false;
+
+      comparisonResult.className =
+        "comparison-result " + verdictClass;
+
+
+      const diffSign = diff >= 0 ? "+" : "−";
+
+      const diffPercentSign = diffPercent >= 0 ? "+" : "−";
+
+
+      comparisonResult.innerHTML =
+
+        `<div class="comparison-rows">` +
+
+          `<div class="comparison-row">` +
+            `<span class="comparison-row-label">Допустимый ${config.name}</span>` +
+            `<span class="comparison-row-value">${formatMoney(calculated)}</span>` +
+          `</div>` +
+
+          `<div class="comparison-row">` +
+            `<span class="comparison-row-label">Ваш фактический ${config.name}</span>` +
+            `<span class="comparison-row-value">${formatMoney(userValue)}</span>` +
+          `</div>` +
+
+          `<div class="comparison-row">` +
+            `<span class="comparison-row-label">Разница</span>` +
+            `<span class="comparison-row-value">` +
+              `${diffSign}${formatMoney(Math.abs(diff))} ` +
+              `(${diffPercentSign}${Math.abs(Math.round(diffPercent))}%)` +
+            `</span>` +
+          `</div>` +
+
+        `</div>` +
+
+        `<div class="comparison-verdict">` +
+          `<span class="comparison-verdict-title">${verdictTitle}</span>` +
+          `${verdictText}` +
+        `</div>`;
+
+    }
+
+
+    // Табы выбора метрики
+
+    comparisonTabs.forEach((button) => {
+
+      button.addEventListener("click", () => {
+
+        comparisonMetric = button.dataset.metric;
+
+        comparisonTabs.forEach((b) => {
+
+          b.classList.toggle("active", b === button);
+
+        });
+
+        comparisonMetricLabel.textContent =
+          metricConfig[comparisonMetric].name;
+
+        updateComparison();
+
+      });
+
+    });
+
+
+    // Ввод пользователя
+
+    userValueInput.addEventListener("input", () => {
+
+      formatInputNumber(userValueInput);
+
+      updateComparison();
+
+    });
+
+
+    userValueInput.addEventListener("blur", () => {
+
+      formatInputNumber(userValueInput);
+
+      updateComparison();
+
+    });
+
+
     // ===== Расчёт =====
 
     function calculate() {
-
-      // Экономика
 
       const franchiseFee =
         getValue("franchiseFee");
@@ -936,16 +1567,12 @@
         getValue("acquisitionShare");
 
 
-      // Воронка
-
       const qualifiedConversion =
         getValue("qualifiedConversion");
 
       const qualification =
         getValue("qualification");
 
-
-      // Количество месяцев, когда реально начисляется роялти
 
       const royaltyMonths =
         Math.max(
@@ -954,8 +1581,6 @@
         );
 
 
-      // Роялти с одного франчайзи за весь срок жизни
-
       const totalRoyalty =
         monthlyTurnover *
         royaltyRate /
@@ -963,14 +1588,10 @@
         royaltyMonths;
 
 
-      // Расходы на поддержку за весь срок жизни
-
       const totalSupportCost =
         monthlyCost *
         lifetime;
 
-
-      // Маржинальный LTV
 
       const ltv =
         franchiseFee +
@@ -978,13 +1599,9 @@
         totalSupportCost;
 
 
-      // Не допускаем отрицательный LTV
-
       const positiveLtv =
         Math.max(0, ltv);
 
-
-      // Допустимый CAC
 
       const cac =
         positiveLtv *
@@ -992,23 +1609,17 @@
         100;
 
 
-      // Допустимый CPQL
-
       const cpql =
         cac *
         qualifiedConversion /
         100;
 
 
-      // Допустимый CPL
-
       const cpl =
         cpql *
         qualification /
         100;
 
-
-      // Обновляем результаты
 
       document.getElementById("ltvResult").textContent =
         formatMoney(positiveLtv);
@@ -1022,8 +1633,6 @@
       document.getElementById("cplResult").textContent =
         formatMoney(cpl);
 
-
-      // Пояснение воронки
 
       const qualifiedLeads =
         100 *
@@ -1042,6 +1651,13 @@
         `из которых в среднем ${formatNumber(franchises)} ` +
         `становятся франчайзи. Поэтому допустимый CPL — около ` +
         `${formatMoney(cpl)}.`;
+
+
+      updateStatusForField("qualification");
+
+      updateStatusForField("qualifiedConversion");
+
+      updateComparison();
 
     }
 
@@ -1081,7 +1697,7 @@
     });
 
 
-    // Все остальные поля (кроме слайдера и денежных)
+    // Все остальные поля (кроме слайдера и денежных и сравнения)
 
     const allInputs =
       document.querySelectorAll("input");
@@ -1094,6 +1710,10 @@
       }
 
       if (input.id === "acquisitionShare") {
+        return;
+      }
+
+      if (input.id === "userValue") {
         return;
       }
 
